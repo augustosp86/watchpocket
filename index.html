@@ -60,8 +60,10 @@ main{max-width:640px;margin:0 auto;padding:14px 14px 100px}
 .badge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block}
 .hbtn{background:transparent;border:1.5px solid #e8e0d5;border-radius:8px;padding:4px 9px;font-size:12px;color:#8b7d74;cursor:pointer;font-family:inherit}
 .dk .hbtn{border-color:#3d3835;color:#9e948e}
-.qbtn{width:28px;height:28px;border-radius:50%;border:1.5px solid #e8e0d5;background:transparent;color:#8b7d74;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:inherit;line-height:1}
+.qbtn{width:28px;height:28px;border-radius:50%;border:1.5px solid #e8e0d5;background:transparent;color:#8b7d74;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:inherit;line-height:1;transition:all .2s ease}
 .dk .qbtn{border-color:#3d3835;color:#9e948e}
+.qbtn:hover{transform:scale(1.12);background:#f0ebe3;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.dk .qbtn:hover{background:#302d2b}
 .sdiv{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#b8732a;margin:14px 0 8px;padding-left:2px}
 input[type=range]{accent-color:#b8732a;width:100%}
 </style>
@@ -96,7 +98,6 @@ const ATYPES=[
 const AICO={cash:'💵',debit:'🏦',savliq:'💰',invliq:'📈',sav:'🎯',inv:'📊',credit:'💳'};
 const isLiq=t=>['cash','debit','savliq','invliq'].includes(t);
 const isSav=t=>['sav','inv','savliq','invliq'].includes(t);
-
 // ── CASHFLOW LOGIC ────────────────────────────────────────────────
 function firstYM(cd,cardId,cdates){
   const dt=new Date(cd+'T12:00:00');
@@ -113,7 +114,6 @@ function getStmt(cardId,ymStr,charges){
   const ch=charges.filter(c=>c.accountId===cardId&&c.yearMonth===ymStr);
   return{charges:ch,total:ch.reduce((s,c)=>s+c.amount,0)};
 }
-
 // ── STATE ─────────────────────────────────────────────────────────
 let S={
   dark:false,tab:0,
@@ -155,7 +155,6 @@ let S={
   histView:'mes',histMonth:thisYM,histYear:String(cy),
 };
 let MF={};
-
 // ── COMPUTED ──────────────────────────────────────────────────────
 function comp(){
   const allCharges=S.creditExps.flatMap(e=>genCharges(e,S.cardDates));
@@ -164,7 +163,6 @@ function comp(){
   const savAccts=S.accounts.filter(a=>isSav(a.type));
   const nonCredit=S.accounts.filter(a=>a.type!=='credit');
   const totalLiq=liqAccts.reduce((s,a)=>s+a.balance,0);
-  // Committed = statements whose DUE DATE falls in thisYM
   const committed=cards.reduce((sum,card)=>{
     const relYMs=[...new Set(Object.entries(S.cardDates).filter(([k,v])=>k.startsWith(card.id+'::')&&ymOf(v.due)===thisYM).map(([k])=>k.split('::')[1]))];
     return sum+relYMs.reduce((s,ym2)=>{
@@ -178,7 +176,6 @@ function comp(){
   const thisInc=thisCash.filter(tx=>tx.isIncome).reduce((s,tx)=>s+tx.amount,0);
   const thisExp=thisCash.filter(tx=>!tx.isIncome).reduce((s,tx)=>s+(tx.deductMode==='mine'?tx.amount*tx.myPct/100:tx.amount),0);
   const debts=[...S.cashTxs,...S.creditExps].filter(tx=>tx.shared&&!tx.isIncome&&!tx.debtPaid);
-  // Upcoming (past 30 days + next 45)
   const tod=new Date(),fut=new Date();fut.setDate(fut.getDate()+45);const past=new Date();past.setDate(past.getDate()-30);
   const upcoming=[];
   S.dues.filter(d=>d.status==='pending').forEach(d=>{const dt=new Date(d.dueDate+'T12:00:00');if(dt>=past&&dt<=fut)upcoming.push({type:'due',id:d.id,name:d.name,amount:d.amount,date:d.dueDate,raw:d,over:dt<tod});});
@@ -187,14 +184,12 @@ function comp(){
   const cardTots=cards.map(c=>({name:c.name,total:getStmt(c.id,nextYM,allCharges).total,cardId:c.id})).filter(c=>c.total>0);
   const nextDues=S.dues.filter(d=>ymOf(d.dueDate)===nextYM&&d.status==='pending');
   const nextTotal=cardTots.reduce((s,c)=>s+c.total,0)+nextDues.reduce((s,d)=>s+d.amount,0);
-  // History
   const moMap={};
   S.cashTxs.forEach(tx=>{const mk=ymOf(tx.payDate);if(!moMap[mk])moMap[mk]={month:mk,income:0,expense:0,txs:[]};if(tx.isIncome)moMap[mk].income+=tx.amount;else moMap[mk].expense+=tx.deductMode==='mine'?tx.amount*tx.myPct/100:tx.amount;moMap[mk].txs.push(tx);});
   const hist=Object.values(moMap).sort((a,b)=>b.month.localeCompare(a.month)).map(d=>({...d,income:Math.round(d.income),expense:Math.round(d.expense),net:Math.round(d.income-d.expense)}));
   const yrMap={};hist.forEach(h=>{const yr=h.month.slice(0,4);if(!yrMap[yr])yrMap[yr]={year:yr,income:0,expense:0};yrMap[yr].income+=h.income;yrMap[yr].expense+=h.expense;});
   const yrHist=Object.values(yrMap).sort((a,b)=>b.year.localeCompare(a.year)).map(d=>({...d,net:Math.round(d.income-d.expense)}));
   const years=[...new Set(hist.map(h=>h.month.slice(0,4)))].sort((a,b)=>b.localeCompare(a));
-  // Filters
   const months=[];for(let i=-12;i<=2;i++){const d2=new Date(cy,cm+i,1);months.push(ym(d2.getFullYear(),d2.getMonth()));}
   const filtTxs=[...S.cashTxs,...S.creditExps].filter(tx=>{
     const pd=tx.payDate||tx.consumptionDate||tx.consumDate;
@@ -204,7 +199,6 @@ function comp(){
   }).sort((a,b)=>{const da=a.payDate||a.consumptionDate||a.consumDate,db=b.payDate||b.consumptionDate||b.consumDate;return db.localeCompare(da);});
   return{allCharges,cards,liqAccts,savAccts,nonCredit,totalLiq,committed,duesAmt,netAvail,thisInc,thisExp,debts,upcoming,cardTots,nextDues,nextTotal,hist,yrHist,years,months,filtTxs};
 }
-
 // ── DISPATCH ──────────────────────────────────────────────────────
 function dispatch(a,p){
   const apply=(accs,id,delta)=>accs.map(x=>x.id===id?{...x,balance:Math.round((x.balance+delta)*100)/100}:x);
@@ -236,7 +230,6 @@ function dispatch(a,p){
     S.modal=null;
   }
   else if(a==='TRANSFER'){
-    // Move money between accounts, no income/expense recorded
     const{fromId,toId,amount}=p;
     S.accounts=apply(apply(S.accounts,fromId,-amount),toId,amount);
     S.modal=null;
@@ -273,9 +266,32 @@ function dispatch(a,p){
   else if(a==='SAVE_DUE'){S.dues=[...S.dues,{...p,id:'d-'+Date.now(),status:'pending'}];S.modal=null;}
   else if(a==='EXPORT'){doExport();}
   else if(a==='IMPORT'){doImport(p);}
+  // ── NUEVA ACCIÓN: ELIMINAR CUENTA (la mejora que pediste) ─────
+  else if(a==='DEL_ACC'){
+    const accId=p;
+    const acc=S.accounts.find(x=>x.id===accId);
+    if(!acc) return;
+    const cashRefs=S.cashTxs.filter(t=>t.accountId===accId).length;
+    const crRefs=S.creditExps.filter(e=>e.accountId===accId).length;
+    const refCount=cashRefs+crRefs;
+    let msg=`¿Eliminar la cuenta “${acc.name}”?`;
+    if(refCount>0){
+      msg=`La cuenta “${acc.name}” tiene ${refCount} movimiento${refCount===1?'':'s'} asociado${refCount===1?'':'s'}.\n\n¿Eliminar la cuenta Y TODOS los movimientos asociados?`;
+    }
+    if(!confirm(msg)) return;
+    // Eliminar cuenta
+    S.accounts=S.accounts.filter(x=>x.id!==accId);
+    // Eliminar movimientos asociados
+    S.cashTxs=S.cashTxs.filter(t=>t.accountId!==accId);
+    S.creditExps=S.creditExps.filter(e=>e.accountId!==accId);
+    // Limpiar pagos y fechas de tarjetas si era una tarjeta
+    S.stmtPays=S.stmtPays.filter(sp=>sp.fromId!==accId&&sp.cardId!==accId);
+    if(acc.type==='credit'){
+      Object.keys(S.cardDates).forEach(k=>{if(k.startsWith(accId+'::')) delete S.cardDates[k];});
+    }
+  }
   render();
 }
-
 // ── EXPORT / IMPORT ───────────────────────────────────────────────
 function doExport(){
   const bom='\uFEFF';
@@ -324,7 +340,6 @@ function doImport(file){
   };
   reader.readAsText(file,'utf-8');
 }
-
 // ── RENDER ────────────────────────────────────────────────────────
 function render(){
   const C=comp();
@@ -332,14 +347,12 @@ function render(){
   document.getElementById('R').innerHTML=html(C);
   wire(C);
 }
-
 // ── COLOR HELPERS ─────────────────────────────────────────────────
 const M=()=>S.dark?'#9e948e':'#8b7d74';
 const IN=()=>S.dark?'#302d2b':'#f0ebe3';
 const BD=()=>S.dark?'#3d3835':'#e8e0d5';
 const TX=()=>S.dark?'#f5f0eb':'#2d2520';
 const BG=()=>S.dark?'#242120':'#fff';
-
 // ── HTML ──────────────────────────────────────────────────────────
 function html(C){
   const tabs=['Inicio','Movimientos','Tarjetas','Análisis'];
@@ -365,7 +378,6 @@ function html(C){
 </div>
 ${S.modal?modal(C):''}`;
 }
-
 // ── TAB: HOME ─────────────────────────────────────────────────────
 function tabHome(C){
   const prog=Math.min(C.thisInc>0?C.thisExp/C.thisInc*100:0,100);
@@ -373,7 +385,6 @@ function tabHome(C){
   const cells=[...Array(first).fill(null),...Array.from({length:dN},(_,i)=>i+1)];
   const dd={};C.upcoming.forEach(item=>{const dt=new Date(item.date+'T12:00:00');if(dt.getFullYear()===S.calYr&&dt.getMonth()===S.calMo){const d=dt.getDate();if(!dd[d])dd[d]=[];dd[d].push(item);}});
   const vis=S.showAllUp?C.upcoming:C.upcoming.slice(0,5);
-
   return `
 <!-- CAL -->
 <div class="card">
@@ -393,7 +404,6 @@ function tabHome(C){
     }).join('')}
   </div>
 </div>
-
 <!-- BALANCE -->
 <div class="card">
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
@@ -415,13 +425,11 @@ function tabHome(C){
   }).join('')}
   <button id="bAddAcc" style="background:transparent;border:1.5px dashed ${BD()};border-radius:9px;padding:7px 12px;color:${M()};cursor:pointer;font-size:12px;width:100%;text-align:left;margin-top:6px;font-family:inherit">+ Agregar cuenta</button>
 </div>
-
 <!-- SAVINGS -->
 ${C.savAccts.length?`<div class="card"><div class="sdiv" style="margin-top:0">Ahorros e inversiones</div>
   ${C.savAccts.map(a=>aRow(a)).join('')}
   <div style="border-top:1px solid ${BD()};padding-top:8px;margin-top:4px;display:flex;justify-content:space-between"><span style="font-size:12px;color:${M()}">Total apartado</span><span style="font-size:13px;font-weight:600;color:#5c9e6e">${fmt(C.savAccts.reduce((s,a)=>s+a.balance,0))}</span></div>
 </div>`:''}
-
 <!-- UPCOMING -->
 <div class="card">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
@@ -440,7 +448,6 @@ ${C.savAccts.length?`<div class="card"><div class="sdiv" style="margin-top:0">Ah
     </div>`;
   }).join('')}
 </div>
-
 <!-- DEBTS -->
 ${C.debts.length?`<div class="card"><span class="lbl">Deudas pendientes</span>
   ${C.debts.map(tx=>{const their=Math.round(tx.amount*(1-tx.myPct/100));return`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:${S.dark?'rgba(184,115,42,.13)':'#fef3e2'};border-radius:11px;margin-bottom:7px">
@@ -448,7 +455,6 @@ ${C.debts.length?`<div class="card"><span class="lbl">Deudas pendientes</span>
     <button class="sm" data-a="got-paid" data-tid="${tx.id}" data-ttype="${tx.type}">✓ Me pagaron</button>
   </div>`;}).join('')}
 </div>`:''}
-
 <!-- NEXT MONTH -->
 <div class="card" id="bTogNx" style="cursor:pointer">
   <div style="display:flex;justify-content:space-between;align-items:center">
@@ -461,7 +467,6 @@ ${C.debts.length?`<div class="card"><span class="lbl">Deudas pendientes</span>
     ${!C.nextTotal?`<p style="font-size:13px;color:${M()};text-align:center">—</p>`:''}
   </div>`:''}
 </div>
-
 <!-- PROGRESS -->
 <div class="card"><span class="lbl">Gastos del mes</span>
   <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;color:${M()}">
@@ -471,16 +476,15 @@ ${C.debts.length?`<div class="card"><span class="lbl">Deudas pendientes</span>
   <div class="prog"><div style="height:100%;width:${Math.min(prog,100)}%;background:${prog>85?'#c0392b':'#b8732a'};border-radius:3px"></div></div>
 </div>`;
 }
-
 function aRow(acc){
   return`<div class="arow">
     <span style="font-size:13px;color:${M()};flex:1">${AICO[acc.type]||'💰'} ${esc(acc.name)}</span>
     <span style="font-size:13px;font-weight:600;color:${acc.balance>=0?'#5c9e6e':'#c0392b'};margin-right:8px">${fmt(acc.balance)}</span>
     <button class="qbtn" data-a="qminus" data-aid="${acc.id}">−</button>
     <button class="qbtn" data-a="qplus" data-aid="${acc.id}" style="margin-left:4px">+</button>
+    <button class="qbtn" data-a="del-acc" data-aid="${acc.id}" style="margin-left:8px;color:#c0392b">🗑</button>
   </div>`;
 }
-
 // ── TAB: TRANSACTIONS ─────────────────────────────────────────────
 function tabTxns(C){
   return`
@@ -520,7 +524,6 @@ ${C.filtTxs.map(tx=>{
 }).join('')}
 ${!C.filtTxs.length?`<p style="text-align:center;padding:36px 0;color:${M()};font-size:14px">—</p>`:''}`;
 }
-
 // ── TAB: CARDS ────────────────────────────────────────────────────
 function tabCards(C){
   if(!C.cards.length)return`<div class="card" style="text-align:center;padding:36px 0;color:${M()}"><div style="font-size:32px;margin-bottom:10px">💳</div><p>No hay tarjetas cargadas</p></div>`;
@@ -553,13 +556,11 @@ ${yms.map(ymStr=>{
   </div>`;
 }).join('')}`;
 }
-
 // ── TAB: ANALYSIS ─────────────────────────────────────────────────
 function tabAnalysis(C){
   const view=S.histView;
   const sc=(label,val,col)=>`<div style="text-align:center;padding:10px;background:${col}18;border-radius:12px"><div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:${col};margin-bottom:4px">${label}</div><div style="font-size:15px;font-weight:700;color:${col}">${val}</div></div>`;
   const ts=(inc,exp,net)=>`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">${sc('Ingresos','+'+fmt(inc),'#5c9e6e')}${sc('Gastos','-'+fmt(exp),'#c0392b')}${sc('Neto',(net>=0?'+':'')+fmt(net),net>=0?'#5c9e6e':'#c0392b')}</div>`;
-
   let content='';
   if(view==='mes'){
     const selMo=C.hist.find(h=>h.month===S.histMonth)||C.hist[0];
@@ -588,7 +589,6 @@ ${bars(moInYr,'mes')}`;
     content=`${ts(ti,te,ti-te)}${bars(C.yrHist.slice().reverse(),'año')}
 <div style="margin-top:12px">${C.yrHist.map(yr=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid ${BD()}"><span style="font-size:14px;font-weight:600">${yr.year}</span><div style="display:flex;gap:10px;font-size:13px"><span style="color:#5c9e6e">+${fmt(yr.income)}</span><span style="color:#c0392b">-${fmt(yr.expense)}</span><span style="font-weight:700;color:${yr.net>=0?'#5c9e6e':'#c0392b'}">${yr.net>=0?'+':''}${fmt(yr.net)}</span></div></div>`).join('')}</div>`;
   }
-
   return`<div class="card">
 <div class="seg" style="margin-bottom:14px">
   ${[['mes','Por mes'],['año','Por año'],['global','Global']].map(([v,l])=>`<button class="sbtn" data-a="hview" data-val="${v}" style="border-color:${view===v?'#b8732a':BD()};background:${view===v?'#fef3e2':'transparent'};color:${view===v?'#b8732a':M()}">${l}</button>`).join('')}
@@ -596,7 +596,6 @@ ${bars(moInYr,'mes')}`;
 ${content}
 </div>`;
 }
-
 function pie(data){
   if(!data.length)return'';
   const total=data.reduce((s,d)=>s+d.value,0);
@@ -609,7 +608,6 @@ function pie(data){
   const legend=data.slice(0,6).map((d,i)=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px"><div style="width:10px;height:10px;border-radius:50%;background:${CC[i%CC.length]};flex-shrink:0"></div><span style="font-size:12px;color:${M()};flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.name)}</span><span style="font-size:12px;font-weight:600">${fmt(d.value)}</span></div>`).join('');
   return`<span class="lbl">Gastos por categoría</span><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px"><svg width="180" height="180" viewBox="0 0 180 180">${paths.join('')}<circle cx="90" cy="90" r="38" fill="${BG()}"/></svg><div style="flex:1;min-width:120px">${legend}</div></div>`;
 }
-
 function bars(data,ltype){
   if(!data.length)return`<p style="text-align:center;color:${M()};padding:16px 0">Sin datos</p>`;
   const maxV=Math.max(...data.flatMap(d=>[d.income,d.expense]),1);
@@ -621,7 +619,6 @@ function bars(data,ltype){
   });
   return`<div style="overflow-x:auto"><svg width="${W}" height="${H+18}" viewBox="0 0 ${W} ${H+18}"><text x="8" y="12" font-size="9" fill="#5c9e6e">■ Ingresos</text><text x="72" y="12" font-size="9" fill="#c0392b">■ Gastos</text>${bs.join('')}</svg></div>`;
 }
-
 // ── MODAL ─────────────────────────────────────────────────────────
 function modal(C){
   const m=S.modal;
@@ -631,7 +628,6 @@ function modal(C){
   const seg=(id,opts,act)=>`<div class="seg">${opts.map(([v,l,col])=>`<button class="sbtn" data-seg="${id}" data-val="${v}" style="border-color:${act===v?col:BD()};background:${act===v?col+'18':'transparent'};color:${act===v?col:M()}">${l}</button>`).join('')}</div>`;
   const mbtns=`<div style="display:flex;gap:10px;margin-bottom:4px"><button id="bCancel" class="btn-s">Cancelar</button><button id="bSave" class="btn-p">Guardar</button></div>`;
   let body='';
-
   if(m.type==='quick'){
     const acc=S.accounts.find(a=>a.id===m.accId);
     const isIn=MF.isIncome!=null?MF.isIncome:m.isIncome;
@@ -742,14 +738,12 @@ function modal(C){
   }
   return`<div class="modal-bg" id="mBg"><div class="mbox">${body}</div></div>`;
 }
-
 // ── WIRE ──────────────────────────────────────────────────────────
 function wire(C){
   const on=(id,fn)=>{const el=document.getElementById(id);if(el)el.addEventListener('click',fn);};
   const onC=(id,fn)=>{const el=document.getElementById(id);if(el)el.addEventListener('change',fn);};
   const onI=(id,fn)=>{const el=document.getElementById(id);if(el)el.addEventListener('input',fn);};
   const all=(sel,fn)=>document.querySelectorAll(sel).forEach(el=>el.addEventListener('click',fn));
-
   on('bDark',()=>dispatch('DARK'));
   on('bExp',()=>dispatch('EXPORT'));
   const fi=document.getElementById('fImp');if(fi)fi.addEventListener('change',e=>{if(e.target.files[0])dispatch('IMPORT',e.target.files[0]);e.target.value='';});
@@ -762,7 +756,6 @@ function wire(C){
   onI('inpS',e=>dispatch('SEARCH',e.target.value));
   onC('selMo',e=>dispatch('FMONTH',e.target.value));onC('selAcc',e=>dispatch('FACC',e.target.value));
   onC('selHM',e=>dispatch('HMONTH',e.target.value));onC('selHY',e=>dispatch('HYEAR',e.target.value));
-
   all('[data-a]',function(){
     const a=this.dataset.a;
     if(a==='pay-stmt')dispatch('MODAL',{type:'payStmt',cardId:this.dataset.cid,ymStr:this.dataset.ym});
@@ -775,11 +768,11 @@ function wire(C){
     else if(a==='qplus')dispatch('MODAL',{type:'quick',accId:this.dataset.aid,isIncome:true});
     else if(a==='qminus')dispatch('MODAL',{type:'quick',accId:this.dataset.aid,isIncome:false});
     else if(a==='hview')dispatch('HVIEW',this.dataset.val);
+    // ← NUEVO: botón de eliminar cuenta
+    else if(a==='del-acc') dispatch('DEL_ACC', this.dataset.aid);
   });
-
   on('mBg',function(e){if(e.target.id==='mBg')dispatch('MODAL',null);});
   on('bCls',()=>dispatch('MODAL',null));on('bCancel',()=>dispatch('MODAL',null));
-
   all('[data-seg]',function(){
     const seg=this.dataset.seg,val=this.dataset.val;
     const p=val==='true'?true:val==='false'?false:isNaN(val)?val:Number(val);
@@ -790,19 +783,16 @@ function wire(C){
     else if(seg==='inst'){MF.installments=p===0?(MF.installments>1?MF.installments:3):1;syncMF();render();}
     else if(seg==='qt'){MF.isIncome=val==='yield'?'yield':val==='transfer'?'transfer':p;MF.category=undefined;syncMF();render();}
   });
-
   on('togS',()=>{MF.shared=!(MF.shared!=null?MF.shared:(S.modal?.prefill?.shared||false));syncMF();render();});
   on('togR',()=>{MF.recurring=!MF.recurring;syncMF();render();});
   onI('mPct',function(){document.getElementById('pctL').textContent=this.value+'%';MF.myPct=parseInt(this.value);});
   on('bSave',()=>save(C));
 }
-
 function syncMF(){
   ['mDesc','mAmt','mCat','mCdate','mPdate','mAcc','mCard','mInst','mSW','mName','mDate','mBal','mClosing','mDue','mToAcc'].forEach(id=>{const el=document.getElementById(id);if(el)MF[id]=el.type==='number'?parseFloat(el.value)||0:el.value;});
 }
 const gv=(id,def)=>{const el=document.getElementById(id);return el?el.value:(def||'');};
 const gn=(id,def)=>{const el=document.getElementById(id);return el?parseFloat(el.value)||0:(def||0);};
-
 function save(C){
   const m=S.modal;
   if(m.type==='quick'){
@@ -845,7 +835,6 @@ function save(C){
   else if(m.type==='cdates'){const cl=gv('mClosing'),due=gv('mDue');if(!cl||!due)return;dispatch('CDATES',{cardId:m.cardId,ymStr:m.ymStr,closing:cl,due});}
   else if(m.type==='addAcc'){const name=gv('mName');if(!name)return;dispatch('ADD_ACC',{name,type:MF.accType||'debit',balance:gn('mBal')});}
 }
-
 render();
 </script>
 </body>
