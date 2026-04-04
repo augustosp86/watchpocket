@@ -8,8 +8,36 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="Cuentas"/>
 <meta name="theme-color" content="#c17f3a"/>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' rx='90' fill='%23c17f3a'/%3E%3Crect x='128' y='178' width='144' height='47' fill='%23a86820'/%3E%3Cellipse cx='200' cy='178' rx='72' ry='18' fill='%23f0b040'/%3E%3Cellipse cx='200' cy='225' rx='72' ry='18' fill='%237a4a10'/%3E%3Crect x='128' y='225' width='144' height='40' fill='%239a5e18'/%3E%3Cellipse cx='200' cy='265' rx='72' ry='18' fill='%23c8862e'/%3E%3Crect x='128' y='265' width='144' height='40' fill='%23804e14'/%3E%3Cellipse cx='200' cy='305' rx='72' ry='18' fill='%237a4a10'/%3E%3Cellipse cx='185' cy='174' rx='28' ry='7' fill='%23fff' opacity='.28'/%3E%3Cpolyline points='110,290 150,240 190,260 260,175' fill='none' stroke='%23fff' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' opacity='.85'/%3E%3Ccircle cx='260' cy='175' r='10' fill='%23fff' opacity='.9'/%3E%3Cpolygon points='260,155 278,182 242,182' fill='%23fff' opacity='.9'/%3E%3C/svg%3E"/>
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' rx='90' fill='%23c17f3a'/%3E%3Crect x='128' y='178' width='144' height='47' fill='%23a86820'/%3E%3Cellipse cx='200' cy='178' rx='72' ry='18' fill='%23f0b040'/%3E%3Cellipse cx='200' cy='225' rx='72' ry='18' fill='%237a4a10'/%3E%3Crect x='128' y='225' width='144' height='40' fill='%239a5e18'/%3E%3Cellipse cx='200' cy='265' rx='72' ry='18' fill='%23c8862e'/%3E%3Crect x='128' y='265' width='144' height='40' fill='%23804e14'/%3E%3Cellipse cx='200' cy='305' rx='72' ry='18' fill='%237a4a10'/%3E%3Cellipse cx='185' cy='174' rx='28' ry='7' fill='%23fff' opacity='.28'/%3E%3Cpolyline points='110,290 150,240 190,260 260,175' fill='none' stroke='%23fff' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' opacity='.85'/%3E%3Ccircle cx='260' cy='175' r='10' fill='%23fff' opacity='.9'/%3E%3Cpolygon points='260,155 278,182 242,182' fill='%23fff' opacity='.9'/%3E%3C/svg%3E"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' rx='90' fill='%23c17f3a'/%3E%3Cellipse cx='200' cy='188' rx='72' ry='18' fill='%23f0b040'/%3E%3Crect x='128' y='188' width='144' height='44' fill='%23a86820'/%3E%3Cellipse cx='200' cy='232' rx='72' ry='18' fill='%23c8862e'/%3E%3Crect x='128' y='232' width='144' height='40' fill='%23804e14'/%3E%3Cellipse cx='200' cy='272' rx='72' ry='18' fill='%237a4a10'/%3E%3Cellipse cx='184' cy='183' rx='26' ry='6' fill='%23fff' opacity='.3'/%3E%3Cpolyline points='115,295 155,245 195,265 265,178' fill='none' stroke='%23fff' stroke-width='10' stroke-linecap='round' stroke-linejoin='round' opacity='.9'/%3E%3Ccircle cx='265' cy='178' r='11' fill='%23fff' opacity='.9'/%3E%3Cpolygon points='265,156 285,185 245,185' fill='%23fff' opacity='.9'/%3E%3C/svg%3E"/>
+<script>
+(function(){
+  const c=document.createElement('canvas');c.width=180;c.height=180;
+  const x=c.getContext('2d');
+  // rounded rect background
+  const r=36;x.beginPath();x.moveTo(r,0);x.lineTo(180-r,0);x.quadraticCurveTo(180,0,180,r);x.lineTo(180,180-r);x.quadraticCurveTo(180,180,180-r,180);x.lineTo(r,180);x.quadraticCurveTo(0,180,0,180-r);x.lineTo(0,r);x.quadraticCurveTo(0,0,r,0);x.closePath();
+  x.fillStyle='#c17f3a';x.fill();
+  // coin top ellipse
+  x.fillStyle='#f0b040';x.beginPath();x.ellipse(90,84,52,13,0,0,Math.PI*2);x.fill();
+  // coin body
+  x.fillStyle='#a86820';x.fillRect(38,84,104,32);
+  // coin bottom ellipse
+  x.fillStyle='#c8862e';x.beginPath();x.ellipse(90,116,52,13,0,0,Math.PI*2);x.fill();
+  // second coin
+  x.fillStyle='#804e14';x.fillRect(38,116,104,28);
+  x.fillStyle='#7a4a10';x.beginPath();x.ellipse(90,144,52,13,0,0,Math.PI*2);x.fill();
+  // shine
+  x.fillStyle='rgba(255,255,255,0.28)';x.beginPath();x.ellipse(80,80,20,5,0,0,Math.PI*2);x.fill();
+  // arrow line
+  x.strokeStyle='rgba(255,255,255,0.9)';x.lineWidth=7;x.lineCap='round';x.lineJoin='round';
+  x.beginPath();x.moveTo(46,133);x.lineTo(70,106);x.lineTo(95,118);x.lineTo(132,74);x.stroke();
+  // arrow head
+  x.fillStyle='rgba(255,255,255,0.9)';
+  x.beginPath();x.moveTo(132,62);x.lineTo(144,80);x.lineTo(120,80);x.closePath();x.fill();
+  // set as apple touch icon
+  const l=document.createElement('link');l.rel='apple-touch-icon';l.href=c.toDataURL('image/png');
+  document.head.appendChild(l);
+})();
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -110,7 +138,7 @@ function firstYM(cd,cardId,cdates){
   const dt=new Date(cd+'T12:00:00');
   const cym=ym(dt.getFullYear(),dt.getMonth());
   const cl=cdates[cardId+'::'+cym]?.closing;
-  if(!cl)return addMo(cym,1);
+  if(!cl)return cym; // sin cierre cargado: asumimos cuota 1 en el mismo mes del consumo
   return dt<=new Date(cl+'T12:00:00')?cym:addMo(cym,1);
 }
 function genCharges(exp,cdates){
@@ -195,7 +223,11 @@ S.cardDates['a5::'+thisYM]={closing:D(18),due:D(8,cm+1)};
   addTx('h-m3-4','Alquiler',170000,'Hogar',dPrev(1,3),dPrev(1,3),'a2',false,false,100);
   addTx('h-m3-5','Educación curso',22000,'Educación',dPrev(15,3),dPrev(15,3),'a2',false,false,100);
   addTx('h-m3-6','Servicios',8500,'Servicios',dPrev(8,3),dPrev(8,3),'a2',false,false,100);
-  addTx('h-m3-7','Rendimiento IOL',3900,'Rendimientos',dPrev(15,3),dPrev(15,3),'a6',true,false,100);
+  // Ahorros demo — transferencias a cuentas de ahorro
+  addTx('h-m1-9','Depósito ahorro',20000,'Rendimientos',dPrev(20,1),dPrev(20,1),'a7',true,false,100);
+  addTx('h-m1-10','Rendimiento fondo',4800,'Rendimientos',dPrev(15,1),dPrev(15,1),'a6',true,false,100);
+  addTx('h-m2-10','Depósito ahorro',25000,'Rendimientos',dPrev(18,2),dPrev(18,2),'a7',true,false,100);
+  addTx('h-m3-8','Depósito ahorro',15000,'Rendimientos',dPrev(19,3),dPrev(19,3),'a8',true,false,100);
 })();
 let MF={};
 
@@ -245,35 +277,57 @@ function comp(){
   const cardTots=cards.map(c=>({name:c.name,total:getStmt(c.id,nextYM,allCharges).total,cardId:c.id})).filter(c=>c.total>0);
   const nextDues=S.dues.filter(d=>ymOf(d.dueDate)===nextYM&&d.status==='pending');
   const nextTotal=cardTots.reduce((s,c)=>s+c.total,0)+nextDues.reduce((s,d)=>s+d.amount,0);
-  // History
+  // History — track savings separately
+  // "savings" = ingresos a cuentas de tipo sav/inv/savliq/invliq (rendimientos + depósitos a ahorro)
+  const savAcctIds=new Set(S.accounts.filter(a=>isSav(a.type)).map(a=>a.id));
   const moMap={};
   S.cashTxs.forEach(tx=>{
     const mk=ymOf(tx.payDate);
-    if(!moMap[mk])moMap[mk]={month:mk,income:0,expense:0,txs:[]};
-    if(tx.isIncome)moMap[mk].income+=tx.amount;
-    else moMap[mk].expense+=tx.deductMode==='mine'?tx.amount*tx.myPct/100:tx.amount;
+    if(!moMap[mk])moMap[mk]={month:mk,income:0,expense:0,savings:0,txs:[]};
+    if(tx.isIncome){
+      moMap[mk].income+=tx.amount;
+      // Si el ingreso es a una cuenta de ahorro, también cuenta como ahorro
+      if(savAcctIds.has(tx.accountId))moMap[mk].savings+=tx.amount;
+    } else {
+      moMap[mk].expense+=tx.deductMode==='mine'?tx.amount*tx.myPct/100:tx.amount;
+    }
     moMap[mk].txs.push(tx);
   });
+  // Transferencias hacia cuentas de ahorro también cuentan como ahorro del mes
+  // (se detectan por el TRANSFER action — los cashTxs no registran transferencias,
+  //  pero podemos aproximar: movimientos con categoría 'Rendimientos' a cuentas sav)
   const hist=Object.values(moMap).sort((a,b)=>b.month.localeCompare(a.month))
-    .map(d=>({...d,income:Math.round(d.income),expense:Math.round(d.expense),net:Math.round(d.income-d.expense)}));
+    .map(d=>({...d,income:Math.round(d.income),expense:Math.round(d.expense),savings:Math.round(d.savings),net:Math.round(d.income-d.expense)}));
   const yrMap={};
   hist.forEach(h=>{
     const yr=h.month.slice(0,4);
-    if(!yrMap[yr])yrMap[yr]={year:yr,income:0,expense:0};
-    yrMap[yr].income+=h.income;yrMap[yr].expense+=h.expense;
+    if(!yrMap[yr])yrMap[yr]={year:yr,income:0,expense:0,savings:0};
+    yrMap[yr].income+=h.income;yrMap[yr].expense+=h.expense;yrMap[yr].savings+=h.savings;
   });
   const yrHist=Object.values(yrMap).sort((a,b)=>b.year.localeCompare(a.year))
     .map(d=>({...d,net:Math.round(d.income-d.expense)}));
   const years=[...new Set(hist.map(h=>h.month.slice(0,4)))].sort((a,b)=>b.localeCompare(a));
   const months=[];
   for(let i=-12;i<=2;i++){const d2=new Date(cy,cm+i,1);months.push(ym(d2.getFullYear(),d2.getMonth()));}
-  const filtTxs=[...S.cashTxs,...S.creditExps].filter(tx=>{
-    const pd=tx.payDate||tx.consumptionDate||tx.consumDate;
-    const ch=tx.type==='cr'?genCharges(tx,S.cardDates):[];
-    const mM=S.fMonth==='all'||(tx.type==='cr'?ch.some(c=>c.yearMonth===S.fMonth):ymOf(pd)===S.fMonth);
+  // Para tarjetas: expandir cada cuota como fila separada
+  const crRows=[];
+  S.creditExps.forEach(exp=>{
+    const ch=genCharges(exp,S.cardDates);
+    const matchAcc=S.fAcc==='all'||exp.accountId===S.fAcc;
+    const matchSearch=!S.search||exp.description.toLowerCase().includes(S.search.toLowerCase());
+    if(!matchAcc||!matchSearch)return;
+    ch.forEach(c=>{
+      const matchMonth=S.fMonth==='all'||c.yearMonth===S.fMonth;
+      if(matchMonth)crRows.push({...exp,_charge:c,_sortDate:c.yearMonth+'-01'});
+    });
+  });
+  const cashRows=S.cashTxs.filter(tx=>{
+    const pd=tx.payDate||tx.consumDate;
+    const mM=S.fMonth==='all'||ymOf(pd)===S.fMonth;
     return mM&&(S.fAcc==='all'||tx.accountId===S.fAcc)&&(!S.search||tx.description.toLowerCase().includes(S.search.toLowerCase()));
-  }).sort((a,b)=>{
-    const da=a.payDate||a.consumptionDate||a.consumDate,db=b.payDate||b.consumptionDate||b.consumDate;
+  });
+  const filtTxs=[...cashRows,...crRows].sort((a,b)=>{
+    const da=a._sortDate||(a.payDate||a.consumDate),db=b._sortDate||(b.payDate||b.consumDate);
     return db.localeCompare(da);
   });
   return{allCharges,cards,liqAccts,savAccts,nonCredit,totalLiq,committed,duesAmt,netAvail,thisInc,thisExp,debts,upcoming,cardTots,nextDues,nextTotal,hist,yrHist,years,months,filtTxs};
@@ -367,12 +421,19 @@ function dispatch(action,payload){
     }
     case 'GOT_PAID':{
       const{tx,amount,method,toId}=payload;
-      if(method!=='other'){
+      // Don't add income — instead deposit the received amount to the chosen account
+      // and adjust the original expense so it reflects only what you actually paid
+      if(method!=='other'&&toId){
         S.accounts=applyBal(S.accounts,toId,amount);
-        S.cashTxs=[...S.cashTxs,{id:'pay-'+Date.now(),type:'cf',description:'Cobro: '+tx.description,amount,category:'Otros ingresos',consumDate:td(),payDate:td(),accountId:toId,isIncome:true,shared:false,myPct:100,deductMode:'mine',sharedWith:'',debtPaid:false}];
       }
-      if(tx.type==='cf')S.cashTxs=S.cashTxs.map(t=>t.id===tx.id?{...t,debtPaid:true}:t);
-      else S.creditExps=S.creditExps.map(e=>e.id===tx.id?{...e,debtPaid:true}:e);
+      // Mark as settled — the tx stays as a record but flagged paid
+      if(tx.type==='cf'){
+        // Recalculate: the expense was originally e.g. $6800, you paid 50% = $3400
+        // They paid you back $3400, so your net cost = $3400. Mark debtPaid so it disappears from debts.
+        S.cashTxs=S.cashTxs.map(t=>t.id===tx.id?{...t,debtPaid:true}:t);
+      } else {
+        S.creditExps=S.creditExps.map(e=>e.id===tx.id?{...e,debtPaid:true}:e);
+      }
       S.modal=null; break;
     }
     case 'CDATES':{
@@ -590,26 +651,20 @@ function tabHome(C){
 </div>
 
 <div class="card" style="background:linear-gradient(135deg,${S.dark?'#1e1b18':'#fff8ef'},${S.dark?'#252017':'#fff'});border-color:${S.dark?'#2d2820':'#f0d8b8'}">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
-    <div>
-      <span class="lbl" style="margin-bottom:4px">Disponible neto</span>
-      <div style="font-family:'Playfair Display',serif;font-size:38px;font-weight:400;color:${C.netAvail>=0?'var(--green)':'var(--red)'};line-height:1;letter-spacing:-1px">${fmt(C.netAvail)}</div>
+  <span class="lbl" style="margin-bottom:6px">Disponible neto</span>
+  <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:400;color:${C.netAvail>=0?'var(--green)':'var(--red)'};line-height:1;letter-spacing:-1px;margin-bottom:18px">${fmt(C.netAvail)}</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+    <div style="text-align:center;padding:9px 6px;background:${S.dark?'rgba(255,255,255,.04)':'rgba(0,0,0,.03)'};border-radius:12px;border:1px solid ${BD()}">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:${M()};margin-bottom:4px">Líquido</div>
+      <div style="font-size:14px;font-weight:700;color:${TX()}">${fmt(C.totalLiq)}</div>
     </div>
-    <div style="text-align:right">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${M()};margin-bottom:2px">Líquido</div>
-      <div style="font-size:18px;font-weight:600">${fmt(C.totalLiq)}</div>
+    <div style="text-align:center;padding:9px 6px;background:${S.dark?'rgba(196,122,26,.13)':'rgba(193,127,58,.09)'};border-radius:12px;border:1px solid rgba(193,127,58,.2)">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--amber);margin-bottom:4px">Comprometido</div>
+      <div style="font-size:14px;font-weight:700;color:var(--amber)">-${fmt(C.committed)}</div>
     </div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-    <div style="background:${S.dark?'rgba(196,122,26,.15)':'rgba(193,127,58,.1)'};border-radius:12px;padding:10px 12px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--amber);margin-bottom:3px">Comprometido</div>
-      <div style="font-size:16px;font-weight:700;color:var(--amber)">-${fmt(C.committed)}</div>
-      <div style="font-size:10px;color:${M()};margin-top:2px">tarjetas por vencer</div>
-    </div>
-    <div style="background:rgba(197,48,48,.07);border-radius:12px;padding:10px 12px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--red);margin-bottom:3px">Vencimientos</div>
-      <div style="font-size:16px;font-weight:700;color:var(--red)">-${fmt(C.duesAmt)}</div>
-      <div style="font-size:10px;color:${M()};margin-top:2px">este mes</div>
+    <div style="text-align:center;padding:9px 6px;background:rgba(197,48,48,.07);border-radius:12px;border:1px solid rgba(197,48,48,.15)">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--red);margin-bottom:4px">Vencimientos</div>
+      <div style="font-size:14px;font-weight:700;color:var(--red)">-${fmt(C.duesAmt)}</div>
     </div>
   </div>
 </div>
@@ -706,10 +761,12 @@ function tabTxns(C){
 ${C.filtTxs.map(tx=>{
   const acc=S.accounts.find(a=>a.id===tx.accountId);
   const isCr=tx.type==='cr',isIn=tx.isIncome;
-  const amt=isCr?tx.amount:(tx.deductMode==='mine'?tx.amount*tx.myPct/100:tx.amount);
+  const amt=isCr?tx._charge?tx._charge.amount:tx.amount:(tx.deductMode==='mine'?tx.amount*tx.myPct/100:tx.amount);
   const ci=CATS.indexOf(tx.category),bar=isCr?'var(--amber)':CC[ci>=0?ci:9];
-  const ch=isCr?genCharges(tx,S.cardDates):[];
-  return '<div class="txrow"><div style="width:4px;align-self:stretch;border-radius:4px;background:'+bar+';flex-shrink:0"></div><div style="width:36px;height:36px;border-radius:10px;background:'+(isIn?'rgba(61,154,106,.12)':isCr?'rgba(196,122,26,.12)':'rgba(197,48,48,.08)')+';display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">'+(isIn?'↑':isCr?'💳':'↓')+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(tx.description)+(isCr?'<span class="pill" style="background:rgba(196,122,26,.13);color:var(--amber);margin-left:5px">'+tx.installments+'c</span>':'')+(tx.shared?'<span class="pill" style="background:'+ABG()+';color:var(--accent);margin-left:4px">👥'+tx.myPct+'%</span>':'')+'</div><div style="font-size:11px;color:'+M()+'">'+( isCr?tx.consumptionDate:(tx.payDate||tx.consumDate))+' · '+esc(tx.category)+(isCr&&ch.length?' · 1ª→'+ch[0].yearMonth:'')+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:'+(isIn?'var(--green)':isCr?'var(--amber)':'var(--red)')+'">'+( isIn?'+':'-')+fmt(amt)+'</div><div style="font-size:10px;color:'+M()+'">'+esc(acc?acc.name:'')+'</div></div><div style="display:flex;gap:2px;flex-shrink:0;margin-left:4px"><button data-a="edit-tx" data-tid="'+tx.id+'" data-tt="'+tx.type+'" style="background:transparent;border:none;cursor:pointer;padding:5px;color:var(--teal);font-size:14px">✏️</button><button data-a="del-tx" data-tid="'+tx.id+'" data-tt="'+tx.type+'" style="background:transparent;border:none;cursor:pointer;padding:5px;color:var(--red);font-size:14px">🗑</button></div></div>';
+  // For credit rows, use pre-computed _charge; otherwise derive from filter month
+  const curCharge=isCr?(tx._charge||null):null;
+  const instLabel=isCr&&tx.installments>1?(curCharge?'C'+curCharge.idx+'/'+tx.installments:''):isCr&&tx.installments===1?'1c':'';
+  return '<div class="txrow"><div style="width:4px;align-self:stretch;border-radius:4px;background:'+bar+';flex-shrink:0"></div><div style="width:36px;height:36px;border-radius:10px;background:'+(isIn?'rgba(61,154,106,.12)':isCr?'rgba(196,122,26,.12)':'rgba(197,48,48,.08)')+';display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">'+(isIn?'↑':isCr?'💳':'↓')+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(tx.description)+(instLabel?'<span class="pill" style="background:rgba(196,122,26,.13);color:var(--amber);margin-left:5px">'+instLabel+'</span>':'')+(tx.shared?'<span class="pill" style="background:'+ABG()+';color:var(--accent);margin-left:4px">👥'+tx.myPct+'%</span>':'')+'</div><div style="font-size:11px;color:'+M()+'">'+(isCr?tx.consumptionDate:(tx.payDate||tx.consumDate))+' · '+esc(tx.category)+(isCr&&curCharge&&tx.installments>1?' · '+curCharge.yearMonth:'')+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:'+(isIn?'var(--green)':isCr?'var(--amber)':'var(--red)')+'">'+( isIn?'+':'-')+fmt(amt)+'</div><div style="font-size:10px;color:'+M()+'">'+esc(acc?acc.name:'')+'</div></div><div style="display:flex;gap:2px;flex-shrink:0;margin-left:4px"><button data-a="edit-tx" data-tid="'+tx.id+'" data-tt="'+tx.type+'" style="background:transparent;border:none;cursor:pointer;padding:5px;color:var(--teal);font-size:14px">✏️</button><button data-a="del-tx" data-tid="'+tx.id+'" data-tt="'+tx.type+'" style="background:transparent;border:none;cursor:pointer;padding:5px;color:var(--red);font-size:14px">🗑</button></div></div>';
 }).join('')}
 ${!C.filtTxs.length?'<div style="text-align:center;padding:48px 0;color:'+M()+'"><div style="font-size:36px;margin-bottom:10px">📭</div><div>Sin movimientos</div></div>':''}`;
 }
@@ -796,14 +853,37 @@ function buildPie(data){
 
 function buildBars(data,ltype){
   if(!data.length)return'<p style="text-align:center;color:'+M()+';padding:16px 0">Sin datos</p>';
-  const maxV=Math.max(...data.flatMap(d=>[d.income,d.expense]),1);
-  const H=110,bw=13,pl=14,step=bw*2+4+10,W=Math.max(280,pl+data.length*step+20);
+  const maxV=Math.max(...data.flatMap(d=>[d.income||0,d.expense||0,d.savings||0]),1);
+  const H=140,bw=11,gap=2,pl=28,grp=bw*3+gap*2+8,W=Math.max(300,pl+data.length*grp+20);
+  const fmt2=n=>{const v=Math.abs(n||0);return v>=1000000?'$'+(v/1000000).toFixed(1)+'M':v>=1000?'$'+Math.round(v/1000)+'k':'$'+v;};
   const bs=data.map((d,i)=>{
-    const x=pl+i*step,ih=d.income/maxV*(H-22),eh=d.expense/maxV*(H-22);
+    const x=pl+i*grp;
+    const ih=Math.max((d.income||0)/maxV*(H-30),2);
+    const eh=Math.max((d.expense||0)/maxV*(H-30),2);
+    const sh=Math.max((d.savings||0)/maxV*(H-30),2);
+    const hasSav=(d.savings||0)>0;
     const lbl=ltype==='año'?d.year:MSH[parseInt(d.month.slice(5,7))-1];
-    return '<rect x="'+x+'" y="'+(H-ih)+'" width="'+bw+'" height="'+Math.max(ih,2)+'" fill="var(--green)" rx="2" opacity=".85"/><rect x="'+(x+bw+2)+'" y="'+(H-eh)+'" width="'+bw+'" height="'+Math.max(eh,2)+'" fill="var(--red)" rx="2" opacity=".85"/><text x="'+(x+bw)+'" y="'+(H+13)+'" text-anchor="middle" font-size="9" fill="'+M()+'" font-family="Inter,sans-serif">'+lbl+'</text>';
+    return [
+      '<rect x="'+x+'" y="'+(H-ih)+'" width="'+bw+'" height="'+ih+'" fill="var(--green)" rx="2" opacity=".85"/>',
+      d.income?'<text x="'+(x+bw/2)+'" y="'+(H-ih-3)+'" text-anchor="middle" font-size="7" fill="var(--green)" font-family="Inter,sans-serif">'+fmt2(d.income)+'</text>':'',
+      '<rect x="'+(x+bw+gap)+'" y="'+(H-eh)+'" width="'+bw+'" height="'+eh+'" fill="var(--red)" rx="2" opacity=".85"/>',
+      d.expense?'<text x="'+(x+bw+gap+bw/2)+'" y="'+(H-eh-3)+'" text-anchor="middle" font-size="7" fill="var(--red)" font-family="Inter,sans-serif">'+fmt2(d.expense)+'</text>':'',
+      hasSav?'<rect x="'+(x+bw*2+gap*2)+'" y="'+(H-sh)+'" width="'+bw+'" height="'+sh+'" fill="var(--teal)" rx="2" opacity=".85"/>':'',
+      hasSav?'<text x="'+(x+bw*2+gap*2+bw/2)+'" y="'+(H-sh-3)+'" text-anchor="middle" font-size="7" fill="var(--teal)" font-family="Inter,sans-serif">'+fmt2(d.savings)+'</text>':'',
+      '<text x="'+(x+bw+gap)+'" y="'+(H+12)+'" text-anchor="middle" font-size="8" fill="'+M()+'" font-family="Inter,sans-serif">'+lbl+'</text>'
+    ].join('');
   });
-  return '<div style="overflow-x:auto"><svg width="'+W+'" height="'+(H+18)+'" viewBox="0 0 '+W+' '+(H+18)+'"><rect x="0" y="0" width="'+W+'" height="'+H+'" rx="6" fill="'+IN()+'" opacity=".4"/><text x="8" y="14" font-size="9" fill="var(--green)" font-weight="600" font-family="Inter,sans-serif">■ Ingresos</text><text x="72" y="14" font-size="9" fill="var(--red)" font-weight="600" font-family="Inter,sans-serif">■ Gastos</text>'+bs.join('')+'</svg></div>';
+  const grid=[0.25,0.5,0.75,1].map(t=>{
+    const y=H-t*(H-30);
+    return '<line x1="'+pl+'" y1="'+y+'" x2="'+(W-6)+'" y2="'+y+'" stroke="'+BD()+'" stroke-width="0.5"/>'
+      +'<text x="'+(pl-3)+'" y="'+(y+3)+'" text-anchor="end" font-size="7" fill="'+M()+'" font-family="Inter,sans-serif">'+fmt2(maxV*t)+'</text>';
+  }).join('');
+  const legend='<text x="'+pl+'" y="11" font-size="8" fill="var(--green)" font-weight="600" font-family="Inter,sans-serif">■ Ingresos</text>'
+    +'<text x="'+(pl+62)+'" y="11" font-size="8" fill="var(--red)" font-weight="600" font-family="Inter,sans-serif">■ Gastos</text>'
+    +'<text x="'+(pl+118)+'" y="11" font-size="8" fill="var(--teal)" font-weight="600" font-family="Inter,sans-serif">■ Ahorro</text>';
+  return '<div style="overflow-x:auto;padding:4px 0"><svg width="'+W+'" height="'+(H+22)+'" viewBox="0 0 '+W+' '+(H+22)+'">'
+    +'<rect x="0" y="14" width="'+W+'" height="'+H+'" rx="6" fill="'+IN()+'" opacity=".35"/>'
+    +legend+grid+bs.join('')+'</svg></div>';
 }
 
 // ── MODAL ─────────────────────────────────────────────────────────
@@ -886,7 +966,18 @@ function buildModal(C){
   else if(m.type==='gotPaid'){
     const method=MF.method||'cash';
     const their=Math.round(m.tx.amount*(1-m.tx.myPct/100));
-    body=mh('✓ Me pagaron')+'<div class="mbody"><div style="background:rgba(61,154,106,.1);border-radius:16px;padding:14px;border:1px solid rgba(61,154,106,.2)"><div style="font-size:12px;color:'+M()+'">'+esc(m.tx.description)+' · '+esc(m.tx.sharedWith||'')+'</div><div style="font-family:\'Playfair Display\',serif;font-size:28px;font-weight:400;color:var(--green);margin-top:3px">'+fmt(their)+'</div></div>'+mi('mAmt','Monto recibido','number',MF.amount||their)+seg('method',[['cash','💵 Efectivo','var(--accent)'],['transfer','🏦 Transferencia','var(--accent)'],['other','Otro','var(--muted)']],method)+(method!=='other'?ms('mAcc','Acreditá en',C.nonCredit.map(a=>[a.id,a.name]),MF.toId||(C.nonCredit[0]?C.nonCredit[0].id:'')):'')+ mbtns+'</div>';
+    const myPaid=Math.round(m.tx.amount*m.tx.myPct/100);
+    body=mh('✓ Me pagaron')+'<div class="mbody">'
+    +'<div style="background:rgba(61,154,106,.1);border-radius:16px;padding:14px;border:1px solid rgba(61,154,106,.2)">'
+    +'<div style="font-size:12px;color:'+M()+'">'+esc(m.tx.description)+' · '+esc(m.tx.sharedWith||'')+' te debe</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-size:28px;font-weight:400;color:var(--green);margin-top:3px">'+fmt(their)+'</div>'
+    +'<div style="font-size:11px;color:'+M()+';margin-top:6px">Tu gasto queda como <strong>'+fmt(myPaid)+'</strong> en vez de '+fmt(m.tx.amount)+'</div>'
+    +'</div>'
+    +'<div class="ibox">No se registra un ingreso. El dinero recibido se acredita en tu cuenta y el gasto queda ajustado a tu parte real.</div>'
+    +mi('mAmt','Monto recibido','number',MF.amount||their)
+    +seg('method',[['cash','💵 Efectivo','var(--accent)'],['transfer','🏦 Transferencia','var(--accent)'],['other','Solo marcar cobrado','var(--muted)']],method)
+    +(method!=='other'?ms('mAcc','Acreditá en',C.nonCredit.map(a=>[a.id,a.name]),MF.toId||(C.nonCredit[0]?C.nonCredit[0].id:'')):'')
+    +mbtns+'</div>';
   }
   else if(m.type==='cdates'){
     const card=S.accounts.find(a=>a.id===m.cardId);
