@@ -131,7 +131,7 @@ const ATYPES=[
 ];
 const AICO={cash:'💵',debit:'🏦',savliq:'💰',invliq:'📈',sav:'🎯',inv:'📊',credit:'💳'};
 const isLiq=t=>['cash','debit','savliq','invliq'].includes(t);
-const isSav=t=>['sav','inv','savliq','invliq'].includes(t);
+const isSav=t=>['sav','inv'].includes(t); // solo ahorros no líquidos
 
 // ── CARD LOGIC ────────────────────────────────────────────────────
 function firstYM(cd,cardId,cdates){
@@ -160,8 +160,8 @@ let S={
     {id:'a4',name:'Visa Galicia',type:'credit',balance:0},
     {id:'a5',name:'Mastercard',type:'credit',balance:0},
     {id:'a6',name:'Fondo IOL',type:'invliq',balance:120000},
-    {id:'a7',name:'Reserva vacaciones',type:'sav',balance:50000},
-    {id:'a8',name:'Fondo ahorro',type:'inv',balance:80000},
+    {id:'a7',name:'Reserva vacaciones',type:'sav',balance:50000,currency:'ARS'},
+    {id:'a8',name:'Fondo ahorro',type:'inv',balance:80000,currency:'ARS'},
   ],
   cashTxs:[
     {id:'t1',type:'cf',description:'Sueldo',amount:350000,category:'Sueldo',consumDate:D(1),payDate:D(1),accountId:'a2',isIncome:true,shared:false,myPct:100,deductMode:'mine',sharedWith:'',debtPaid:false},
@@ -680,14 +680,33 @@ function tabHome(C){
   <button id="bAddAcc" style="background:transparent;border:1.5px dashed ${BD()};border-radius:12px;padding:8px 13px;color:${M()};cursor:pointer;font-size:12px;width:100%;text-align:left;margin-top:4px;font-family:inherit">+ Agregar cuenta</button>
 </div>
 
-${C.savAccts.length?`<div class="card">
+<div class="card">
   <div class="sdiv">Ahorros e inversiones</div>
-  ${C.savAccts.map(a=>aRow(a)).join('')}
-  <div style="border-top:1px solid ${BD()};padding-top:9px;margin-top:4px;display:flex;justify-content:space-between;align-items:center">
-    <span style="font-size:12px;color:${M()}">Total apartado</span>
-    <span style="font-size:14px;font-weight:700;color:var(--green)">${fmt(C.savAccts.reduce((s,a)=>s+a.balance,0))}</span>
-  </div>
-</div>`:''}
+  ${C.savAccts.map(a=>{
+    const cur=a.currency||'ARS';
+    const curColor=cur==='ARS'?'var(--green)':cur==='USD'?'#2b6cb0':cur==='EUR'?'#6b46c1':'var(--teal)';
+    return '<div class="arow"><div style="width:34px;height:34px;border-radius:10px;background:'+ABG()+';display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">'+(AICO[a.type]||'🎯')+'</div>'
+      +'<span style="font-size:13px;color:'+M()+';flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:6px">'+esc(a.name)+'</span>'
+      +'<span style="font-size:11px;font-weight:700;color:'+curColor+';background:'+curColor+'18;padding:2px 7px;border-radius:8px;flex-shrink:0;margin-right:6px">'+cur+'</span>'
+      +'<span style="font-size:14px;font-weight:700;color:'+(a.balance>=0?'var(--green)':'var(--red)')+';flex-shrink:0;margin-right:6px">'+fmt(a.balance)+'</span>'
+      +'<button class="qbtn" data-a="qminus" data-aid="'+a.id+'">−</button>'
+      +'<button class="qbtn" data-a="qplus" data-aid="'+a.id+'" style="margin-left:4px">+</button>'
+      +'<button class="qbtn" data-a="del-acc" data-aid="'+a.id+'" style="margin-left:6px;color:var(--red)">🗑</button>'
+      +'</div>';
+  }).join('')}
+  ${C.savAccts.length?`<div style="border-top:1px solid ${BD()};padding-top:9px;margin-top:4px">
+    ${(()=>{
+      const byCur={};
+      C.savAccts.forEach(a=>{const c=a.currency||'ARS';if(!byCur[c])byCur[c]=0;byCur[c]+=a.balance;});
+      return Object.entries(byCur).map(([cur,total])=>{
+        const cc=cur==='ARS'?'var(--green)':cur==='USD'?'#2b6cb0':cur==='EUR'?'#6b46c1':'var(--teal)';
+        const sym=cur==='ARS'?'$':cur==='USD'?'U$S':cur==='EUR'?'€':cur+' ';
+        return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:12px;color:'+M()+'">Total '+cur+'</span><span style="font-size:13px;font-weight:700;color:'+cc+'">'+sym+Number(total).toLocaleString('es-AR',{maximumFractionDigits:0})+'</span></div>';
+      }).join('');
+    })()}
+  </div>`:''}
+  <button id="bAddSav" style="background:transparent;border:1.5px dashed ${BD()};border-radius:12px;padding:8px 13px;color:${M()};cursor:pointer;font-size:12px;width:100%;text-align:left;margin-top:8px;font-family:inherit">+ Agregar ahorro / inversión</button>
+</div>
 
 ${C.debts.length?`<div class="card">
   <span class="lbl">Deudas pendientes por cobrar</span>
@@ -987,9 +1006,28 @@ function buildModal(C){
     body=mh('📅 Fechas · '+esc(card?card.name:'')+' '+m.ymStr)+'<div class="mbody"><div class="ibox">📅 <strong>Cierre:</strong> gastos hasta esta fecha entran en el resumen.<br><br>💳 <strong>Vencimiento:</strong> cuando el pago sale de tu saldo.</div>'+mi('mClosing','Fecha de cierre','date',MF.closing||(ex?ex.closing:new Date(y,mo,0).toISOString().slice(0,10)))+mi('mDue','Fecha de vencimiento','date',MF.due||(ex?ex.due:new Date(y,mo,10).toISOString().slice(0,10)))+mbtns+'</div>';
   }
   else if(m.type==='addAcc'){
-    const type=MF.accType||'debit';
+    const filter=m.filter||'all'; // 'liq' = cuentas disponibles, 'sav' = ahorros
+    const visibleTypes=filter==='liq'
+      ? ATYPES.filter(o=>o.liq||o.v==='credit')   // cash, debit, savliq, invliq, credit
+      : filter==='sav'
+      ? ATYPES.filter(o=>!o.liq&&o.v!=='credit')  // sav, inv
+      : ATYPES;
+    const defaultType=filter==='sav'?'sav':filter==='liq'?'debit':'debit';
+    const type=MF.accType||(visibleTypes.find(o=>o.v===defaultType)?defaultType:visibleTypes[0]?.v||'debit');
     const opt=ATYPES.find(o=>o.v===type);
-    body=mh('➕ Agregar cuenta')+'<div class="mbody"><div><label class="flbl">Tipo de cuenta</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">'+ATYPES.map(o=>'<button class="sbtn" data-seg="accType" data-val="'+o.v+'" style="border-color:'+(type===o.v?'var(--accent)':'var(--border)')+';background:'+(type===o.v?ABG():'transparent')+';color:'+(type===o.v?'var(--accent)':'var(--muted)')+';font-size:12px;text-align:left;padding:9px 11px;white-space:normal">'+o.l+'</button>').join('')+'</div>'+(opt?'<div class="ibox" style="margin-top:8px">'+(opt.liq?'✅ Suma al saldo disponible':'📦 Aparece en Ahorros e inversiones')+'</div>':'')+'</div>'+mi('mName','Nombre','text','','Ej: Fondo IOL')+(type!=='credit'?mi('mBal','Saldo inicial','number',0):'')+mbtns+'</div>';
+    const isSavType=isSav(type);
+    const cur=MF.currency||'ARS';
+    const CURRENCIES=[['ARS','🇦🇷 ARS'],['USD','🇺🇸 USD'],['EUR','🇪🇺 EUR'],['BRL','🇧🇷 BRL'],['UYU','🇺🇾 UYU']];
+    const title=filter==='sav'?'➕ Agregar ahorro / inversión':'➕ Agregar cuenta';
+    body=mh(title)+'<div class="mbody">'
+      +(visibleTypes.length>1?'<div><label class="flbl">Tipo</label>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">'+visibleTypes.map(o=>'<button class="sbtn" data-seg="accType" data-val="'+o.v+'" style="border-color:'+(type===o.v?'var(--accent)':'var(--border)')+';background:'+(type===o.v?ABG():'transparent')+';color:'+(type===o.v?'var(--accent)':'var(--muted)')+';font-size:12px;text-align:left;padding:9px 11px;white-space:normal">'+o.l+'</button>').join('')+'</div>'
+      +(opt?'<div class="ibox" style="margin-top:8px">'+(opt.liq?'✅ Suma al saldo disponible':'📦 Aparece en Ahorros e inversiones')+'</div>':'')
+      +'</div>':'')
+      +mi('mName','Nombre','text','',filter==='sav'?'Ej: Dólares reserva':'Ej: Cuenta sueldo')
+      +(isSavType?'<div><label class="flbl">Moneda</label><div class="seg">'+CURRENCIES.map(([v,l])=>'<button class="sbtn" data-seg="currency" data-val="'+v+'" style="border-color:'+(cur===v?'var(--accent)':'var(--border)')+';background:'+(cur===v?ABG():'transparent')+';color:'+(cur===v?'var(--accent)':'var(--muted)')+';font-weight:'+(cur===v?'600':'500')+';flex:0 1 auto">'+l+'</button>').join('')+'</div></div>':'')
+      +(type!=='credit'?mi('mBal','Saldo inicial','number',0):'')
+      +mbtns+'</div>';
   }
 
   return '<div class="modal-bg" id="mBg"><div class="mbox">'+body+'</div></div>';
@@ -1012,7 +1050,8 @@ function wire(C){
   on('bCalTog',()=>dispatch('CAL_TOG'));
   on('bTogUp',()=>dispatch('TOG_UP'));
   on('bTogNx',()=>dispatch('TOG_NX'));
-  on('bAddAcc',()=>dispatch('MODAL',{type:'addAcc'}));
+  on('bAddAcc',()=>dispatch('MODAL',{type:'addAcc',filter:'liq'}));
+  on('bAddSav',()=>dispatch('MODAL',{type:'addAcc',filter:'sav'}));
   on('bNewTx',()=>dispatch('MODAL',{type:'tx'}));
   on('bDue',()=>dispatch('MODAL',{type:'newDue'}));
   onI('inpS',e=>dispatch('SEARCH',e.target.value));
@@ -1069,6 +1108,7 @@ function wire(C){
     if(seg==='payMode'){MF.payMode=val;syncMF();render();}
     else if(seg==='isIncome'){MF.isIncome=p;syncMF();render();}
     else if(seg==='accType'){MF.accType=val;syncMF();render();}
+    else if(seg==='currency'){MF.currency=val;syncMF();render();}
     else if(seg==='method'){MF.method=val;syncMF();render();}
     else if(seg==='inst'){MF.installments=p===0?(MF.installments>1?MF.installments:3):1;syncMF();render();}
     else if(seg==='qt'){MF.isIncome=val==='yield'?'yield':val==='transfer'?'transfer':p;MF.category=undefined;syncMF();render();}
@@ -1130,7 +1170,7 @@ function save(C){
   if(m.type==='payStmt'){dispatch('PAY_STMT',{cardId:m.cardId,ymStr:m.ymStr,amount:gn('mAmt'),payDate:gv('mDate',td()),fromId:gv('mAcc')});return;}
   if(m.type==='gotPaid'){dispatch('GOT_PAID',{tx:m.tx,amount:gn('mAmt'),method:MF.method||'cash',toId:gv('mAcc')});return;}
   if(m.type==='cdates'){const cl=gv('mClosing'),due=gv('mDue');if(!cl||!due)return;dispatch('CDATES',{cardId:m.cardId,ymStr:m.ymStr,closing:cl,due});return;}
-  if(m.type==='addAcc'){const name=gv('mName');if(!name)return;dispatch('ADD_ACC',{name,type:MF.accType||'debit',balance:gn('mBal')});return;}
+  if(m.type==='addAcc'){const name=gv('mName');if(!name)return;dispatch('ADD_ACC',{name,type:MF.accType||'debit',balance:gn('mBal'),currency:MF.currency||'ARS'});return;}
 }
 
 render();
